@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base Spacing -->
+    <dimen name="spacing_base">4dp</dimen>
+    
+    <!-- Tiny Spacing -->
+    <dimen name="spacing_tiny_xsmall">4dp</dimen>
+    <dimen name="spacing_tiny_small">8dp</dimen>
+    
+    <!-- Small Spacing -->
+    <dimen name="spacing_small_xsmall">12dp</dimen>
+    <dimen name="spacing_small_small">16dp</dimen>
+    
+    <!-- Medium Spacing -->
+    <dimen name="spacing_medium_xsmall">20dp</dimen>
+    <dimen name="spacing_medium_small">24dp</dimen>
+    <dimen name="spacing_medium_medium">32dp</dimen>
+    
+    <!-- Large Spacing -->
+    <dimen name="spacing_large_xsmall">40dp</dimen>
+    <dimen name="spacing_large_small">48dp</dimen>
+    <dimen name="spacing_large_medium">56dp</dimen>
+    <dimen name="spacing_large_large">64dp</dimen>
+    
+    <!-- XLarge Spacing -->
+    <dimen name="spacing_xlarge_xsmall">80dp</dimen>
+    <dimen name="spacing_xlarge_small">96dp</dimen>
+    <dimen name="spacing_xlarge_medium">128dp</dimen>
+    
+    <!-- XXLarge Spacing -->
+    <dimen name="spacing_xxlarge_xsmall">160dp</dimen>
+    <dimen name="spacing_xxlarge_small">192dp</dimen>
+    <dimen name="spacing_xxlarge_medium">224dp</dimen>
+    <dimen name="spacing_xxlarge_large">256dp</dimen>
+    
+    <!-- Common Spacing -->
+    <dimen name="spacing_none">0dp</dimen>
+    <dimen name="spacing_xs">4dp</dimen>
+    <dimen name="spacing_sm">8dp</dimen>
+    <dimen name="spacing_md">12dp</dimen>
+    <dimen name="spacing_lg">16dp</dimen>
+    <dimen name="spacing_xl">20dp</dimen>
+    <dimen name="spacing_xxl">24dp</dimen>
+    <dimen name="spacing_xxxl">32dp</dimen>
+    <dimen name="spacing_xxxxl">40dp</dimen>
+    
+    <!-- Border Radius -->
+    <dimen name="border_radius_none">0dp</dimen>
+    <dimen name="border_radius_small">4dp</dimen>
+    <dimen name="border_radius_medium">8dp</dimen>
+    <dimen name="border_radius_large">12dp</dimen>
+    <dimen name="border_radius_xlarge">16dp</dimen>
+    <dimen name="border_radius_xxlarge">24dp</dimen>
+    <dimen name="border_radius_xxxlarge">32dp</dimen>
+    
+    <!-- Border Width -->
+    <dimen name="border_width_none">0dp</dimen>
+    <dimen name="border_width_thin">1dp</dimen>
+    <dimen name="border_width_medium">2dp</dimen>
+    <dimen name="border_width_thick">4dp</dimen>
+    
+    <!-- Font Sizes -->
+    <dimen name="font_size_xsmall">10sp</dimen>
+    <dimen name="font_size_small">12sp</dimen>
+    <dimen name="font_size_medium">14sp</dimen>
+    <dimen name="font_size_large">16sp</dimen>
+    <dimen name="font_size_xlarge">18sp</dimen>
+    <dimen name="font_size_xxlarge">20sp</dimen>
+    <dimen name="font_size_xxxlarge">24sp</dimen>
+    <dimen name="font_size_display">28sp</dimen>
+    <dimen name="font_size_hero">32sp</dimen>
+    
+    <!-- Line Heights -->
+    <dimen name="line_height_small">16sp</dimen>
+    <dimen name="line_height_medium">20sp</dimen>
+    <dimen name="line_height_large">24sp</dimen>
+    <dimen name="line_height_xlarge">28sp</dimen>
+    <dimen name="line_height_xxlarge">32sp</dimen>
+    <dimen name="line_height_xxxlarge">36sp</dimen>
+    <dimen name="line_height_display">40sp</dimen>
+    
+    <!-- Elevation -->
+    <dimen name="elevation_small">2dp</dimen>
+    <dimen name="elevation_medium">4dp</dimen>
+    <dimen name="elevation_large">8dp</dimen>
+    <dimen name="elevation_xlarge">16dp</dimen>
+    
+    <!-- Shadow Radius -->
+    <dimen name="shadow_radius_small">4dp</dimen>
+    <dimen name="shadow_radius_medium">8dp</dimen>
+    <dimen name="shadow_radius_large">16dp</dimen>
+    <dimen name="shadow_radius_xlarge">24dp</dimen>
+    
+    <!-- Shadow Offset -->
+    <dimen name="shadow_offset_small">2dp</dimen>
+    <dimen name="shadow_offset_medium">4dp</dimen>
+    <dimen name="shadow_offset_large">8dp</dimen>
+    <dimen name="shadow_offset_xlarge">12dp</dimen>
+</resources>
