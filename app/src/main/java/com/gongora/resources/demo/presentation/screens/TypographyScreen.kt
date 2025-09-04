@@ -16,13 +16,8 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.gongora.resources.compose.bcpAliasTokens
 import com.gongora.resources.demo.domain.models.TypographyStyle
-import com.gongora.resources.demo.presentation.screens.UiTypographyScreenTokens.ScreenBackground
-import com.gongora.resources.demo.presentation.screens.UiTypographyScreenTokens.TopBarBackground
-import com.gongora.resources.demo.presentation.screens.UiTypographyScreenTokens.TopBarContent
-import com.gongora.resources.demo.presentation.screens.UiTypographyScreenTokens.AccentBlue
-import com.gongora.resources.demo.presentation.screens.UiTypographyScreenTokens.SampleBackground
-import com.gongora.resources.demo.presentation.screens.UiTypographyScreenTokens.SurfaceBackground
 import com.gongora.resources.demo.presentation.screens.UiTypographyScreenTokens.ScreenPadding
 import com.gongora.resources.demo.presentation.screens.UiTypographyScreenTokens.SectionSpacing
 import com.gongora.resources.demo.presentation.screens.UiTypographyScreenTokens.ContentPadding
@@ -35,17 +30,23 @@ import com.gongora.resources.typography.TypographyUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TypographyScreen(onNavigateBack: () -> Unit) {
+fun TypographyScreen(
+    onNavigateBack: () -> Unit
+) {
     val vm: TypographyViewModel = viewModel()
 
+    // 🎯 USO DE ALIAS TOKENS - Hook principal para cambio de tema automático
+    val result = bcpAliasTokens()
+    val tokens = result.tokens
+
     Scaffold(
-        containerColor = ScreenBackground,
+        containerColor = Color(tokens.surface.static.regular.flat.secondary),
         topBar = {
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = TopBarBackground,
-                    titleContentColor = TopBarContent,
-                    navigationIconContentColor = TopBarContent
+                    containerColor = Color(tokens.surface.static.regular.flat.primary),
+                    titleContentColor = Color(tokens.text.static.regular.primary),
+                    navigationIconContentColor = Color(tokens.text.static.regular.primary)
                 ),
                 title = { Text("Tipografía ✏️") },
                 navigationIcon = {
@@ -55,7 +56,8 @@ fun TypographyScreen(onNavigateBack: () -> Unit) {
                             contentDescription = "Volver"
                         )
                     }
-                }
+                },
+
             )
         }
     ) { padding ->
@@ -66,10 +68,16 @@ fun TypographyScreen(onNavigateBack: () -> Unit) {
             contentPadding = PaddingValues(ScreenPadding),
             verticalArrangement = Arrangement.spacedBy(SectionSpacing)
         ) {
-            sectionHeader("Estilos de Texto")
-            items(vm.typographyStyles) { style -> TypographySampleCard(style) }
+            sectionHeader("Estilos de Texto", tokens.text)
+            items(vm.typographyStyles) { style -> 
+                TypographySampleCard(
+                    style, 
+                    textTokens = tokens.text, 
+                    surfaceTokens = tokens.surface
+                ) 
+            }
 
-            sectionHeader("Tokens de Tipografía")
+            sectionHeader("Tokens de Tipografía", tokens.text)
             fontFamilySection(
                 title = "👨‍💼 Fuente de Marca (Flexo)",
                 fontFamilies = mapOf(
@@ -81,7 +89,9 @@ fun TypographyScreen(onNavigateBack: () -> Unit) {
                     "Bold" to Typography.FontFamily.Brand.bold,
                     "Heavy" to Typography.FontFamily.Brand.heavy,
                     "Black" to Typography.FontFamily.Brand.black
-                )
+                ),
+                textTokens = tokens.text,
+                surfaceTokens = tokens.surface
             )
             fontFamilySection(
                 title = "📝 Fuente de Apoyo (SourceSans3)",
@@ -94,7 +104,9 @@ fun TypographyScreen(onNavigateBack: () -> Unit) {
                     "Bold" to Typography.FontFamily.Supportive.bold,
                     "Heavy" to Typography.FontFamily.Supportive.heavy,
                     "Black" to Typography.FontFamily.Supportive.black
-                )
+                ),
+                textTokens = tokens.text,
+                surfaceTokens = tokens.surface
             )
             tokenSection(
                 title = "⚖️ Pesos de Fuente",
@@ -107,7 +119,9 @@ fun TypographyScreen(onNavigateBack: () -> Unit) {
                     "Bold" to Typography.FontWeight.bold.toString(),
                     "Heavy" to Typography.FontWeight.heavy.toString(),
                     "Black" to Typography.FontWeight.black.toString()
-                )
+                ),
+                textTokens = tokens.text,
+                surfaceTokens = tokens.surface
             )
             tokenSection(
                 title = "📏 Tamaños de Fuente",
@@ -118,7 +132,9 @@ fun TypographyScreen(onNavigateBack: () -> Unit) {
                     "Medium" to "${Typography.FontSize.medium}px",
                     "Large" to "${Typography.FontSize.large}px",
                     "XLarge" to "${Typography.FontSize.xlarge}px"
-                )
+                ),
+                textTokens = tokens.text,
+                surfaceTokens = tokens.surface
             )
             tokenSection(
                 title = "📐 Alturas de Línea",
@@ -126,9 +142,10 @@ fun TypographyScreen(onNavigateBack: () -> Unit) {
                     "Small" to "${Typography.LineHeight.small}px",
                     "Medium" to "${Typography.LineHeight.medium}px",
                     "Large" to "${Typography.LineHeight.large}px",
-                    "XLarge" to "${Typography.LineHeight.xlarge}px",
-                    "2XLarge" to "${Typography.LineHeight.x2large}px"
-                )
+                    "XLarge" to "${Typography.LineHeight.xlarge}px"
+                ),
+                textTokens = tokens.text,
+                surfaceTokens = tokens.surface
             )
             tokenSection(
                 title = "🔤 Espaciado de Letras",
@@ -136,11 +153,13 @@ fun TypographyScreen(onNavigateBack: () -> Unit) {
                     "XSmall" to "${Typography.LetterSpacing.xsmall}px",
                     "Small" to "${Typography.LetterSpacing.small}px",
                     "None" to "${Typography.LetterSpacing.none}px"
-                )
+                ),
+                textTokens = tokens.text,
+                surfaceTokens = tokens.surface
             )
 
-            sectionHeader("Demostración de Pesos")
-            sectionSubHeader("🎨 Flexo - Todos los Pesos")
+            sectionHeader("Demostración de Pesos", tokens.text)
+            sectionSubHeader("🎨 Flexo - Todos los Pesos", tokens.text)
             items(
                 listOf(
                     "Thin" to Typography.FontWeight.thin,
@@ -153,10 +172,15 @@ fun TypographyScreen(onNavigateBack: () -> Unit) {
                     "Black" to Typography.FontWeight.black
                 )
             ) { (name, value) ->
-                WeightDemoCard(weightName = name, weightValue = value)
+                WeightDemoCard(
+                    weightName = name, 
+                    weightValue = value,
+                    textTokens = tokens.text,
+                    surfaceTokens = tokens.surface
+                )
             }
 
-            sectionSubHeader("📖 SourceSans3 - Todos los Pesos")
+            sectionSubHeader("📖 SourceSans3 - Todos los Pesos", tokens.text)
             items(
                 listOf(
                     "Thin" to Typography.FontFamily.Supportive.thin,
@@ -169,41 +193,57 @@ fun TypographyScreen(onNavigateBack: () -> Unit) {
                     "Black" to Typography.FontFamily.Supportive.black
                 )
             ) { (weight, fontName) ->
-                SourceSans3DemoCard(weight = weight, fontName = fontName)
+                SourceSans3DemoCard(
+                    weight = weight, 
+                    fontName = fontName,
+                    textTokens = tokens.text,
+                    surfaceTokens = tokens.surface
+                )
             }
         }
     }
 }
 
-private fun LazyListScope.sectionHeader(text: String) {
+private fun LazyListScope.sectionHeader(
+    text: String,
+    textTokens: com.gongora.resources.theme.TextTokens
+) {
     item {
         Text(
             text = text,
             style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.onBackground
+            color = Color(textTokens.static.regular.primary)
         )
         Spacer(Modifier.height(8.dp))
     }
 }
 
-private fun LazyListScope.sectionSubHeader(text: String) {
+private fun LazyListScope.sectionSubHeader(
+    text: String,
+    textTokens: com.gongora.resources.theme.TextTokens
+) {
     item {
         Text(
             text = text,
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground
+            color = Color(textTokens.static.regular.primary)
         )
         Spacer(Modifier.height(8.dp))
     }
 }
 
-private fun LazyListScope.fontFamilySection(title: String, fontFamilies: Map<String, String>) {
-    sectionSubHeader(title)
+private fun LazyListScope.fontFamilySection(
+    title: String, 
+    fontFamilies: Map<String, String>,
+    textTokens: com.gongora.resources.theme.TextTokens,
+    surfaceTokens: com.gongora.resources.theme.SurfaceTokens
+) {
+    sectionSubHeader(title, textTokens)
     items(fontFamilies.toList()) { (weight, fontName) ->
         Card(
             modifier = Modifier.fillParentMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = SurfaceBackground),
+            colors = CardDefaults.cardColors(containerColor = Color(surfaceTokens.static.regular.flat.primary)),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
             shape = RoundedCornerShape(CardCornerRadius)
         ) {
@@ -212,22 +252,35 @@ private fun LazyListScope.fontFamilySection(title: String, fontFamilies: Map<Str
                     text = weight,
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold,
-                    color = AccentBlue
+                    color = Color(textTokens.static.regular.primary)
                 )
-                Text(text = fontName, style = MaterialTheme.typography.bodySmall)
-                Text(text = "Ejemplo de $weight", style = MaterialTheme.typography.bodyMedium)
+                Text(
+                    text = fontName, 
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(textTokens.static.regular.secondary)
+                )
+                Text(
+                    text = "Ejemplo de $weight", 
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color(textTokens.static.regular.primary)
+                )
             }
         }
         Spacer(Modifier.height(8.dp))
     }
 }
 
-private fun LazyListScope.tokenSection(title: String, tokens: Map<String, String>) {
-    sectionSubHeader(title)
+private fun LazyListScope.tokenSection(
+    title: String, 
+    tokens: Map<String, String>,
+    textTokens: com.gongora.resources.theme.TextTokens,
+    surfaceTokens: com.gongora.resources.theme.SurfaceTokens
+) {
+    sectionSubHeader(title, textTokens)
     items(tokens.toList()) { (key, value) ->
         Card(
             modifier = Modifier.fillParentMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = SurfaceBackground),
+            colors = CardDefaults.cardColors(containerColor = Color(surfaceTokens.static.regular.flat.primary)),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
             shape = RoundedCornerShape(CardCornerRadius)
         ) {
@@ -236,9 +289,13 @@ private fun LazyListScope.tokenSection(title: String, tokens: Map<String, String
                     text = key,
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold,
-                    color = AccentBlue
+                    color = Color(textTokens.static.regular.primary)
                 )
-                Text(text = value, style = MaterialTheme.typography.bodySmall)
+                Text(
+                    text = value, 
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(textTokens.static.regular.secondary)
+                )
             }
         }
         Spacer(Modifier.height(8.dp))
@@ -246,10 +303,14 @@ private fun LazyListScope.tokenSection(title: String, tokens: Map<String, String
 }
 
 @Composable
-private fun TypographySampleCard(typographyStyle: TypographyStyle) {
+private fun TypographySampleCard(
+    typographyStyle: TypographyStyle,
+    textTokens: com.gongora.resources.theme.TextTokens,
+    surfaceTokens: com.gongora.resources.theme.SurfaceTokens
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = SurfaceBackground),
+        colors = CardDefaults.cardColors(containerColor = Color(surfaceTokens.static.regular.flat.primary)),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(CardCornerRadius)
     ) {
@@ -258,24 +319,25 @@ private fun TypographySampleCard(typographyStyle: TypographyStyle) {
                 text = typographyStyle.name,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
-                color = AccentBlue
+                color = Color(textTokens.static.regular.primary)
             )
             Text(
                 text = typographyStyle.description,
                 style = MaterialTheme.typography.bodySmall,
                 fontStyle = FontStyle.Italic,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = Color(textTokens.static.regular.secondary)
             )
             Spacer(Modifier.height(12.dp))
             Text(
                 text = "Nam porta sapien eget ante dictum rhoncus. vitae enim placerat condimentum.",
-                style = typographyStyle.textStyle,
+                style = typographyStyle.textStyle.copy(
+                    color = Color(textTokens.static.regular.primary)
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        color = SampleBackground, shape = RoundedCornerShape(
-                            ChipCornerRadius
-                        )
+                        color = Color(surfaceTokens.static.regular.flat.secondary), 
+                        shape = RoundedCornerShape(ChipCornerRadius)
                     )
                     .padding(SamplePadding)
             )
@@ -284,40 +346,49 @@ private fun TypographySampleCard(typographyStyle: TypographyStyle) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        color = SampleBackground, shape = RoundedCornerShape(
-                            ChipCornerRadius
-                        )
+                        color = Color(surfaceTokens.static.regular.flat.secondary), 
+                        shape = RoundedCornerShape(ChipCornerRadius)
                     )
                     .padding(SamplePadding)
             ) {
                 Text(
                     text = "Propiedades:",
                     style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = Color(textTokens.static.regular.primary)
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
                     text = "Familia: ${typographyStyle.properties.fontFamily}",
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(textTokens.static.regular.secondary)
                 )
                 Text(
                     text = "Tamaño: ${typographyStyle.properties.fontSize}px",
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(textTokens.static.regular.secondary)
                 )
                 Text(
                     text = "Peso: ${typographyStyle.properties.fontWeight}",
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(textTokens.static.regular.secondary)
                 )
                 Text(
                     text = "Altura línea: ${typographyStyle.properties.lineHeight}px",
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(textTokens.static.regular.secondary)
                 )
                 Text(
                     text = "Espaciado: ${typographyStyle.properties.letterSpacing}px",
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(textTokens.static.regular.secondary)
                 )
                 typographyStyle.properties.textDecoration?.let {
-                    Text(text = "Decoración: $it", style = MaterialTheme.typography.bodySmall)
+                    Text(
+                        text = "Decoración: $it", 
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color(textTokens.static.regular.secondary)
+                    )
                 }
             }
         }
@@ -325,10 +396,15 @@ private fun TypographySampleCard(typographyStyle: TypographyStyle) {
 }
 
 @Composable
-private fun WeightDemoCard(weightName: String, weightValue: Int) {
+private fun WeightDemoCard(
+    weightName: String, 
+    weightValue: Int,
+    textTokens: com.gongora.resources.theme.TextTokens,
+    surfaceTokens: com.gongora.resources.theme.SurfaceTokens
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = SurfaceBackground),
+        colors = CardDefaults.cardColors(containerColor = Color(surfaceTokens.static.regular.flat.primary)),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         shape = RoundedCornerShape(CardCornerRadius)
     ) {
@@ -337,13 +413,14 @@ private fun WeightDemoCard(weightName: String, weightValue: Int) {
                 text = "$weightName ($weightValue)",
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Bold,
-                color = AccentBlue
+                color = Color(textTokens.static.regular.primary)
             )
             Text(
                 text = "The quick brown fox jumps over the lazy dog",
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontFamily = TypographyUtils.getBrandFontFamily(weightValue),
-                    fontWeight = mapToFontWeight(weightValue)
+                    fontWeight = mapToFontWeight(weightValue),
+                    color = Color(textTokens.static.regular.primary)
                 )
             )
         }
@@ -351,10 +428,15 @@ private fun WeightDemoCard(weightName: String, weightValue: Int) {
 }
 
 @Composable
-private fun SourceSans3DemoCard(weight: String, fontName: String) {
+private fun SourceSans3DemoCard(
+    weight: String, 
+    fontName: String,
+    textTokens: com.gongora.resources.theme.TextTokens,
+    surfaceTokens: com.gongora.resources.theme.SurfaceTokens
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = SurfaceBackground),
+        colors = CardDefaults.cardColors(containerColor = Color(surfaceTokens.static.regular.flat.primary)),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         shape = RoundedCornerShape(CardCornerRadius)
     ) {
@@ -363,12 +445,13 @@ private fun SourceSans3DemoCard(weight: String, fontName: String) {
                 text = "$weight ($fontName)",
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Bold,
-                color = AccentBlue
+                color = Color(textTokens.static.regular.primary)
             )
             Text(
                 text = "The quick brown fox jumps over the lazy dog",
                 style = MaterialTheme.typography.bodyLarge.copy(
-                    fontFamily = TypographyUtils.getFontFamily(fontName)
+                    fontFamily = TypographyUtils.getFontFamily(fontName),
+                    color = Color(textTokens.static.regular.primary)
                 )
             )
         }
@@ -376,7 +459,6 @@ private fun SourceSans3DemoCard(weight: String, fontName: String) {
 }
 
 private fun mapToFontWeight(value: Int): FontWeight = TypographyUtils.mapToComposeFontWeight(value)
-
 private object UiTypographyScreenTokens {
     val ScreenBackground = Color(0xFFF8FBFF)
     val TopBarBackground = Color(0xFF0D47A1)
@@ -393,3 +475,4 @@ private object UiTypographyScreenTokens {
     val CardCornerRadius = 16.dp
     val ChipCornerRadius = 12.dp
 }
+

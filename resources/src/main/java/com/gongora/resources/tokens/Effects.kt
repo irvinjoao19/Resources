@@ -1,273 +1,84 @@
 package com.gongora.resources.tokens
 
-import android.graphics.Color
 import androidx.annotation.ColorInt
+import androidx.compose.ui.graphics.BlurEffect
+import androidx.compose.ui.graphics.Color
 
 /**
  * Tokens de efectos visuales para el sistema de diseño BCP
  *
- * Define efectos visuales consistentes que incluyen:
- * - Sombras (elevation, shadow)
- * - Efectos de blur
- * - Efectos de glass (cristal)
- * - Gradientes
+ * Define una colección completa de efectos visuales para crear interfaces con profundidad
+ * y modernidad visual. Incluye efectos de vidrio (glass), gradientes con transparencia,
+ * efectos de desenfoque (blur) y sombras con diferentes intensidades.
  *
- * **Tipos de efectos:**
- * - **Shadow**: Sombras para elevación y profundidad
- * - **Blur**: Efectos de desenfoque
- * - **Glass**: Efectos de cristal con transparencia
- * - **Gradient**: Gradientes lineales y radiales
+ * Los efectos están organizados en categorías funcionales:
+ * - Glass: Efectos de vidrio con transparencia y bordes difuminados
+ * - Gradient Glass: Gradientes temáticos con efecto de vidrio
+ * - Blur: Efectos de desenfoque para fondos y overlays
+ * - Shadows: Sombras con diferentes elevaciones y opacidades
  *
  * @author BCP Design System Developer Team
  * @version 1.0.0
  * @since 1.0.0
  */
 object Effects {
-    
-    // ===== SHADOW EFFECTS =====
-    
-    /**
-     * Efectos de sombra para elevación y profundidad
-     */
-    object Shadow {
-        /**
-         * Sombra pequeña para elementos ligeramente elevados
-         */
-        object Small {
-            const val elevation = 2f
-            const val shadowRadius = 4f
-            const val shadowOffsetX = 0f
-            const val shadowOffsetY = 2f
-            @ColorInt val shadowColor = Color.parseColor("#000000")
-            const val shadowAlpha = 0.1f
-        }
-        
-        /**
-         * Sombra media para elementos moderadamente elevados
-         */
-        object Medium {
-            const val elevation = 4f
-            const val shadowRadius = 8f
-            const val shadowOffsetX = 0f
-            const val shadowOffsetY = 4f
-            @ColorInt val shadowColor = Color.parseColor("#000000")
-            const val shadowAlpha = 0.15f
-        }
-        
-        /**
-         * Sombra grande para elementos altamente elevados
-         */
-        object Large {
-            const val elevation = 8f
-            const val shadowRadius = 16f
-            const val shadowOffsetX = 0f
-            const val shadowOffsetY = 8f
-            @ColorInt val shadowColor = Color.parseColor("#000000")
-            const val shadowAlpha = 0.2f
-        }
-        
-        /**
-         * Sombra extra grande para elementos muy elevados
-         */
-        object XLarge {
-            const val elevation = 16f
-            const val shadowRadius = 24f
-            const val shadowOffsetX = 0f
-            const val shadowOffsetY = 12f
-            @ColorInt val shadowColor = Color.parseColor("#000000")
-            const val shadowAlpha = 0.25f
-        }
-    }
-    
-    // ===== BLUR EFFECTS =====
-    
-    /**
-     * Efectos de desenfoque (blur)
-     */
-    object Blur {
-        /**
-         * Blur ligero para efectos sutiles
-         */
-        object Light {
-            const val radius = 4f
-            const val alpha = 0.8f
-        }
-        
-        /**
-         * Blur medio para efectos moderados
-         */
-        object Medium {
-            const val radius = 8f
-            const val alpha = 0.9f
-        }
-        
-        /**
-         * Blur fuerte para efectos intensos
-         */
-        object Heavy {
-            const val radius = 16f
-            const val alpha = 0.95f
-        }
-    }
-    
+
     // ===== GLASS EFFECTS =====
-    
+
     /**
      * Efectos de cristal (glass morphism)
      */
     object Glass {
         /**
-         * Efecto de cristal ligero
+         * Efecto de cristal para tarjetas
          */
-        object Light {
-            const val alpha = 0.1f
-            const val blurRadius = 4f
-            @ColorInt val tintColor = Color.parseColor("#FFFFFF")
+        object EffectGlass {
+            val xlarge = Blur.XLarge
+            val glassBG = GradientGlass.GlassBG
         }
-        
+    }
+
+    /**
+     * Efectos de gradiente con cristal
+     */
+    object GradientGlass {
+
         /**
-         * Efecto de cristal medio
+         * Gradiente glass para logo
          */
-        object Medium {
-            const val alpha = 0.2f
-            const val blurRadius = 8f
-            @ColorInt val tintColor = Color.parseColor("#FFFFFF")
+        object GlassBG {
+            const val startX = 1f
+            const val startY = 0f
+            const val endX = -0.33f
+            const val endY = 1.41f
+            const val alpha = Colors.AlphaValues.alpha_15
         }
-        
+    }
+
+    /**
+     * Efectos de desenfoque (blur)
+     */
+    object Blur {
         /**
-         * Efecto de cristal fuerte
+         * Efecto de blur para formas
          */
-        object Heavy {
-            const val alpha = 0.3f
-            const val blurRadius = 16f
-            @ColorInt val tintColor = Color.parseColor("#FFFFFF")
+        object XLarge {
+            const val blurAmount = 64f
+            const val tintAlpha = 0.25f
         }
     }
-    
-    // ===== GRADIENT EFFECTS =====
-    
-    /**
-     * Efectos de gradiente
-     */
-    object Gradient {
-        /**
-         * Gradientes lineales predefinidos
-         */
-        object Linear {
-            /**
-             * Gradiente azul BCP
-             */
-            object BcpBlue {
-                @ColorInt val startColor = Color.parseColor("#175EFB")
-                @ColorInt val endColor = Color.parseColor("#0549E1")
-                const val angle = 45f
-            }
-            
-            /**
-             * Gradiente naranja BCP
-             */
-            object BcpOrange {
-                @ColorInt val startColor = Color.parseColor("#F7630C")
-                @ColorInt val endColor = Color.parseColor("#CC4B00")
-                const val angle = 45f
-            }
-            
-            /**
-             * Gradiente neutral
-             */
-            object Neutral {
-                @ColorInt val startColor = Color.parseColor("#F1F4F8")
-                @ColorInt val endColor = Color.parseColor("#D7DBE0")
-                const val angle = 45f
-            }
+
+    // ===== SHADOW EFFECTS =====
+
+
+    object Shadows {
+        object ShadowLarge {
+            val shadowColor = Color(Colors.Neutral.black).copy(alpha = Colors.AlphaValues.alpha_10)
+            const val offsetX = 0f
+            const val offsetY = 8f
+            const val blur = 32f
+            const val spread = 0f
+            const val elevation = 10f
         }
-        
-        /**
-         * Gradientes radiales predefinidos
-         */
-        object Radial {
-            /**
-             * Gradiente radial azul
-             */
-            object Blue {
-                @ColorInt val centerColor = Color.parseColor("#175EFB")
-                @ColorInt val edgeColor = Color.parseColor("#0549E1")
-                const val radius = 100f
-            }
-            
-            /**
-             * Gradiente radial naranja
-             */
-            object Orange {
-                @ColorInt val centerColor = Color.parseColor("#F7630C")
-                @ColorInt val edgeColor = Color.parseColor("#CC4B00")
-                const val radius = 100f
-            }
-        }
-    }
-    
-    // ===== UTILITY FUNCTIONS =====
-    
-    /**
-     * Obtiene la elevación para un nivel específico
-     */
-    fun getElevation(level: Int): Float {
-        return when (level) {
-            0 -> 0f
-            1 -> Shadow.Small.elevation
-            2 -> Shadow.Medium.elevation
-            3 -> Shadow.Large.elevation
-            4 -> Shadow.XLarge.elevation
-            else -> Shadow.Small.elevation
-        }
-    }
-    
-    /**
-     * Obtiene el radio de sombra para un nivel específico
-     */
-    fun getShadowRadius(level: Int): Float {
-        return when (level) {
-            0 -> 0f
-            1 -> Shadow.Small.shadowRadius
-            2 -> Shadow.Medium.shadowRadius
-            3 -> Shadow.Large.shadowRadius
-            4 -> Shadow.XLarge.shadowRadius
-            else -> Shadow.Small.shadowRadius
-        }
-    }
-    
-    /**
-     * Obtiene el offset Y de sombra para un nivel específico
-     */
-    fun getShadowOffsetY(level: Int): Float {
-        return when (level) {
-            0 -> 0f
-            1 -> Shadow.Small.shadowOffsetY
-            2 -> Shadow.Medium.shadowOffsetY
-            3 -> Shadow.Large.shadowOffsetY
-            4 -> Shadow.XLarge.shadowOffsetY
-            else -> Shadow.Small.shadowOffsetY
-        }
-    }
-    
-    /**
-     * Obtiene el color de sombra con alpha para un nivel específico
-     */
-    fun getShadowColor(level: Int): Int {
-        val alpha = when (level) {
-            0 -> 0f
-            1 -> Shadow.Small.shadowAlpha
-            2 -> Shadow.Medium.shadowAlpha
-            3 -> Shadow.Large.shadowAlpha
-            4 -> Shadow.XLarge.shadowAlpha
-            else -> Shadow.Small.shadowAlpha
-        }
-        
-        return Color.argb(
-            (alpha * 255).toInt(),
-            Color.red(Shadow.Small.shadowColor),
-            Color.green(Shadow.Small.shadowColor),
-            Color.blue(Shadow.Small.shadowColor)
-        )
     }
 }

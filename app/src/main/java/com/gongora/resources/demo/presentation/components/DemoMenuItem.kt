@@ -25,17 +25,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.gongora.resources.demo.domain.models.DemoMenuItem
 
-/**
- * Reusable component for displaying a demo menu item.
- * @param item The demo menu item to display
- * @param onClick Callback when the item is clicked
- * @param modifier Modifier for the component
- */
 @Composable
 fun DemoMenuItem(
     item: DemoMenuItem,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    containerColor: Color,
+    textPrimaryColor: Color,
+    textSecondaryColor: Color
 ) {
     Card(
         modifier = modifier
@@ -44,7 +41,7 @@ fun DemoMenuItem(
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = containerColor
         )
     ) {
         Row(
@@ -59,12 +56,13 @@ fun DemoMenuItem(
                 modifier = Modifier
                     .size(48.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(MaterialTheme.colorScheme.primaryContainer),
+                    .background(Color(0xFF175EFB)),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = item.icon,
-                    style = MaterialTheme.typography.headlineMedium
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = Color.White
                 )
             }
             
@@ -77,12 +75,12 @@ fun DemoMenuItem(
                     text = item.title,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = textPrimaryColor
                 )
                 Text(
                     text = item.description,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = textSecondaryColor
                 )
             }
             
@@ -91,7 +89,7 @@ fun DemoMenuItem(
                 text = "›",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
+                color = Color(0xFFF7630C)
             )
         }
     }

@@ -16,22 +16,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.gongora.resources.compose.bcpAliasTokens
 import com.gongora.resources.demo.presentation.viewmodels.BorderViewModel
-import com.gongora.resources.tokens.Border
 
-/**
- * Screen displaying border tokens and radius examples.
- */
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BorderScreen(
     onNavigateBack: () -> Unit
 ) {
     val viewModel: BorderViewModel = viewModel()
+
+    val tokens = bcpAliasTokens()
     
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        containerColor = UiBorderScreenTokens.ScreenBackground,
+        containerColor = Color(tokens.surface.static.regular.flat.secondary),
         topBar = {
             TopAppBar(
                 title = { Text("Bordes 🔲") },
@@ -43,10 +43,11 @@ fun BorderScreen(
                         )
                     }
                 },
+
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = UiBorderScreenTokens.TopBarBackground,
-                    titleContentColor = UiBorderScreenTokens.TopBarContent,
-                    navigationIconContentColor = UiBorderScreenTokens.TopBarContent
+                    containerColor = Color(tokens.surface.static.regular.flat.primary),
+                    titleContentColor = Color(tokens.text.static.regular.primary),
+                    navigationIconContentColor = Color(tokens.text.static.regular.primary)
                 )
             )
         }
@@ -58,18 +59,23 @@ fun BorderScreen(
             contentPadding = PaddingValues(UiBorderScreenTokens.ScreenPadding),
             verticalArrangement = Arrangement.spacedBy(UiBorderScreenTokens.SectionSpacing)
         ) {
-            renderBorderWidthSection(viewModel)
-            renderBorderRadiusSection(viewModel)
+            renderBorderWidthSection(viewModel, tokens.text, tokens.surface, tokens.border)
+            renderBorderRadiusSection(viewModel, tokens.text, tokens.surface, tokens.border)
         }
     }
 }
 
-private fun LazyListScope.renderBorderWidthSection(viewModel: BorderViewModel) {
+private fun LazyListScope.renderBorderWidthSection(
+    viewModel: BorderViewModel,
+    textTokens: com.gongora.resources.theme.TextTokens,
+    surfaceTokens: com.gongora.resources.theme.SurfaceTokens,
+    borderTokens: com.gongora.resources.theme.BorderTokens
+) {
     item {
         Text(
             text = "Border Width",
             style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.onBackground,
+            color = Color(textTokens.static.regular.primary),
             modifier = Modifier.padding(bottom = 16.dp)
         )
     }
@@ -78,18 +84,26 @@ private fun LazyListScope.renderBorderWidthSection(viewModel: BorderViewModel) {
         item {
             BorderWidthTokenCard(
                 tokenName = key,
-                tokenValue = value
+                tokenValue = value,
+                textTokens = textTokens,
+                surfaceTokens = surfaceTokens,
+                borderTokens = borderTokens
             )
         }
     }
 }
 
-private fun LazyListScope.renderBorderRadiusSection(viewModel: BorderViewModel) {
+private fun LazyListScope.renderBorderRadiusSection(
+    viewModel: BorderViewModel,
+    textTokens: com.gongora.resources.theme.TextTokens,
+    surfaceTokens: com.gongora.resources.theme.SurfaceTokens,
+    borderTokens: com.gongora.resources.theme.BorderTokens
+) {
     item {
         Text(
             text = "Border Radius",
             style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.onBackground,
+            color = Color(textTokens.static.regular.primary),
             modifier = Modifier.padding(bottom = 16.dp)
         )
     }
@@ -98,7 +112,10 @@ private fun LazyListScope.renderBorderRadiusSection(viewModel: BorderViewModel) 
         item {
             BorderRadiusTokenCard(
                 tokenName = key,
-                tokenValue = value
+                tokenValue = value,
+                textTokens = textTokens,
+                surfaceTokens = surfaceTokens,
+                borderTokens = borderTokens
             )
         }
     }
@@ -107,11 +124,14 @@ private fun LazyListScope.renderBorderRadiusSection(viewModel: BorderViewModel) 
 @Composable
 private fun BorderWidthTokenCard(
     tokenName: String,
-    tokenValue: Float
+    tokenValue: Float,
+    textTokens: com.gongora.resources.theme.TextTokens,
+    surfaceTokens: com.gongora.resources.theme.SurfaceTokens,
+    borderTokens: com.gongora.resources.theme.BorderTokens
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = UiBorderScreenTokens.SurfaceBackground),
+        colors = CardDefaults.cardColors(containerColor = Color(surfaceTokens.static.regular.flat.primary)),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         shape = RoundedCornerShape(UiBorderScreenTokens.CardCornerRadius)
     ) {
@@ -126,12 +146,12 @@ private fun BorderWidthTokenCard(
                     text = tokenName,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = UiBorderScreenTokens.AccentBlue
+                    color = Color(textTokens.static.regular.primary)
                 )
                 Text(
                     text = "${tokenValue.toInt()}px",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = Color(textTokens.static.regular.secondary)
                 )
             }
             
@@ -140,11 +160,11 @@ private fun BorderWidthTokenCard(
                     .size(80.dp, 40.dp)
                     .border(
                         width = tokenValue.dp,
-                        color = UiBorderScreenTokens.BorderColor,
+                        color = Color(borderTokens.static.regular.medium),
                         shape = RoundedCornerShape(8.dp)
                     )
                     .background(
-                        color = UiBorderScreenTokens.SampleBackground,
+                        color = Color(surfaceTokens.static.regular.flat.primary),
                         shape = RoundedCornerShape(8.dp)
                     ),
                 contentAlignment = Alignment.Center
@@ -152,7 +172,7 @@ private fun BorderWidthTokenCard(
                 Text(
                     text = "Ejemplo",
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = Color(textTokens.static.regular.primary)
                 )
             }
         }
@@ -163,11 +183,14 @@ private fun BorderWidthTokenCard(
 @Composable
 private fun BorderRadiusTokenCard(
     tokenName: String,
-    tokenValue: Float
+    tokenValue: Float,
+    textTokens: com.gongora.resources.theme.TextTokens,
+    surfaceTokens: com.gongora.resources.theme.SurfaceTokens,
+    borderTokens: com.gongora.resources.theme.BorderTokens
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = UiBorderScreenTokens.SurfaceBackground),
+        colors = CardDefaults.cardColors(containerColor = Color(surfaceTokens.static.regular.flat.primary)),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         shape = RoundedCornerShape(UiBorderScreenTokens.CardCornerRadius)
     ) {
@@ -182,12 +205,12 @@ private fun BorderRadiusTokenCard(
                     text = tokenName,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = UiBorderScreenTokens.AccentBlue
+                    color = Color(textTokens.static.regular.primary)
                 )
                 Text(
                     text = "${tokenValue.toInt()}px",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = Color(textTokens.static.regular.secondary)
                 )
             }
             
@@ -196,11 +219,11 @@ private fun BorderRadiusTokenCard(
                     .size(80.dp, 40.dp)
                     .border(
                         width = 2.dp,
-                        color = UiBorderScreenTokens.BorderColor,
+                        color = Color(borderTokens.static.regular.medium),
                         shape = RoundedCornerShape(tokenValue.dp)
                     )
                     .background(
-                        color = UiBorderScreenTokens.SampleBackground,
+                        color = Color(surfaceTokens.static.regular.flat.primary),
                         shape = RoundedCornerShape(tokenValue.dp)
                     ),
                 contentAlignment = Alignment.Center
@@ -208,14 +231,13 @@ private fun BorderRadiusTokenCard(
                 Text(
                     text = "Ejemplo",
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = Color(textTokens.static.regular.primary)
                 )
             }
         }
     }
     Spacer(modifier = Modifier.height(8.dp))
 }
-
 private object UiBorderScreenTokens {
     val ScreenBackground = Color(0xFFF8FBFF)
     val TopBarBackground = Color(0xFF0D47A1)
@@ -230,3 +252,4 @@ private object UiBorderScreenTokens {
     val ContentPadding = 12.dp
     val CardCornerRadius = 8.dp
 }
+

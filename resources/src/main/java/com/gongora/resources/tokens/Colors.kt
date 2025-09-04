@@ -16,8 +16,8 @@ import androidx.annotation.ColorInt
  * y accesibilidad en toda la aplicación.
  *
  * @author BCP Design System Developer Team
- * @since 1.0.0
  * @version 1.0.0
+ * @since 1.0.0
  */
 object Colors {
     
@@ -70,7 +70,7 @@ object Colors {
             @ColorInt val gray600 = 0xFF4C5867.toInt()
             @ColorInt val gray700 = 0xFF344151.toInt()
             @ColorInt val gray800 = 0xFF16202C.toInt()
-            @ColorInt val gray900 = 0xFF0F1419.toInt()
+            @ColorInt val gray900 = 0xFF071525.toInt()
         }
         
         object Orange {
@@ -210,5 +210,54 @@ object Colors {
             @ColorInt val lime800 = 0xFF5D5704.toInt()
             @ColorInt val lime900 = 0xFF3B3702.toInt()
         }
+    }
+    
+    // ===== ALPHA UTILITIES =====
+    
+    /**
+     * Valores de transparencia predefinidos para mantener consistencia
+     * Matching React Native alphaValues
+     */
+    object AlphaValues {
+        const val alpha_00 = 0.0f
+        const val alpha_10 = 0.1f
+        const val alpha_15 = 0.15f
+        const val alpha_20 = 0.2f
+        const val alpha_30 = 0.3f
+        const val alpha_40 = 0.4f
+        const val alpha_50 = 0.5f
+        const val alpha_60 = 0.6f
+        const val alpha_70 = 0.7f
+        const val alpha_80 = 0.8f
+        const val alpha_90 = 0.9f
+    }
+    
+    /**
+     * Función helper para aplicar alpha a un color
+     * Matching React Native colorWithAlpha function
+     * 
+     * @param color Color base del sistema
+     * @param alpha Valor de alpha entre 0.0f y 1.0f
+     * @return Color con transparencia aplicada
+     * 
+     * @example
+     * ```kotlin
+     * val transparentBlue = colorWithAlpha(Colors.Brand.BcpBlue.blue500, AlphaValues.alpha_70)
+     * val transparentWhite = colorWithAlpha(Colors.Neutral.white, AlphaValues.alpha_20)
+     * ```
+     */
+    fun colorWithAlpha(@ColorInt color: Int, alpha: Float): Int {
+        // Extraer componentes RGB del color
+        val red = android.graphics.Color.red(color)
+        val green = android.graphics.Color.green(color)
+        val blue = android.graphics.Color.blue(color)
+        
+        // Aplicar alpha y convertir de vuelta a Int
+        return android.graphics.Color.argb(
+            (alpha * 255).toInt(),
+            red,
+            green,
+            blue
+        )
     }
 }

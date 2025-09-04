@@ -102,4 +102,13 @@ object BCPResources {
     fun isDarkTheme(): Boolean {
         return ThemeManager.isDarkTheme()
     }
+
+    // ===== COMPOSE HOOKS =====
+    
+    /**
+     * Hook para acceder a AliasTokens reactivos al tema
+     * 
+     * @see com.gongora.resources.compose.bcpAliasTokens
+     */
+    // Función eliminada para evitar conflicto con la propiedad aliasTokens
 }

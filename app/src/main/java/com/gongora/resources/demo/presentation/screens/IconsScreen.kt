@@ -28,14 +28,23 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gongora.resources.demo.domain.models.IconToken
 import com.gongora.resources.demo.presentation.viewmodels.IconsViewModel
+import com.gongora.resources.compose.bcpAliasTokens
 
 @Composable
-fun IconsScreen(onNavigateBack: () -> Unit) {
+fun IconsScreen(
+    onNavigateBack: () -> Unit,
+    isDarkMode: Boolean
+) {
     val vm: IconsViewModel = viewModel()
     val iconCategories = vm.iconCategories
 
     var isSearchVisible by rememberSaveable { mutableStateOf(false) }
     var query by rememberSaveable { mutableStateOf("") }
+
+    // 🎯 USO DE ALIAS TOKENS - Hook principal para cambio de tema automático
+    val result = bcpAliasTokens()
+    val tokens = result.tokens
+    val isDark = isDarkMode // Usar el parámetro recibido
 
     val filtered by remember(query, iconCategories) {
         derivedStateOf {
@@ -47,7 +56,7 @@ fun IconsScreen(onNavigateBack: () -> Unit) {
     }
 
     Scaffold(
-        containerColor = UiTokens.ScreenBackground,
+        containerColor = Color(tokens.surface.static.regular.flat.secondary),
         topBar = {
             AppTopBar(
                 isSearchVisible = isSearchVisible,
@@ -112,6 +121,7 @@ private fun AppTopBar(
             }
         },
         actions = {
+            // Botón de búsqueda
             IconButton(onClick = onToggleSearch) {
                 Icon(
                     imageVector = if (isSearchVisible) Icons.Filled.Close else Icons.Filled.Search,
@@ -239,16 +249,21 @@ private fun IconTile(token: IconToken) {
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    painter = painterResource(id = token.drawableRes),
-                    contentDescription = token.name,
-                    modifier = Modifier.size(UiTokens.IconFlagSize),
-                    tint =
-                    if (token.category.equals("Flags", ignoreCase = true))
-                        Color.Unspecified
-                    else
-                        MaterialTheme.colorScheme.onPrimaryContainer
-                )
+//                if (token.category.equals("Flags", ignoreCase = true)) {
+//                    Image(
+//                        painter = painterResource(id = token.drawableRes),
+//                        contentDescription = token.name,
+//                        modifier = Modifier.size(UiTokens.IconFlagSize),
+//                        contentScale = ContentScale.Fit
+//                    )
+//                } else {
+                    Icon(
+                        painter = painterResource(id = token.drawableRes),
+                        contentDescription = token.name,
+                        modifier = Modifier.size(UiTokens.IconRegularSize),
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+//                }
             }
 
             Spacer(Modifier.height(10.dp))

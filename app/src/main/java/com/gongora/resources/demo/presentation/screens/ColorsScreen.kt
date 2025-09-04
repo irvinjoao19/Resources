@@ -3,18 +3,45 @@ package com.gongora.resources.demo.presentation.screens
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -27,13 +54,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.gongora.resources.compose.bcpAliasTokens
 import com.gongora.resources.demo.domain.models.ColorToken
-import com.gongora.resources.demo.presentation.screens.UiColorsScreenTokens.CardElevation
 import com.gongora.resources.demo.presentation.screens.UiColorsScreenTokens.CardCornerRadius
+import com.gongora.resources.demo.presentation.screens.UiColorsScreenTokens.CardElevation
 import com.gongora.resources.demo.presentation.screens.UiColorsScreenTokens.CardPadding
 import com.gongora.resources.demo.presentation.screens.UiColorsScreenTokens.GridGap
-import com.gongora.resources.demo.presentation.screens.UiColorsScreenTokens.ScreenBackground
-import com.gongora.resources.demo.presentation.screens.UiColorsScreenTokens.SearchBackground
 import com.gongora.resources.demo.presentation.screens.UiColorsScreenTokens.SectionGap
 import com.gongora.resources.demo.presentation.screens.UiColorsScreenTokens.SeparatorPadding
 import com.gongora.resources.demo.presentation.screens.UiColorsScreenTokens.SwatchRadius
@@ -41,12 +67,17 @@ import com.gongora.resources.demo.presentation.screens.UiColorsScreenTokens.Swat
 import com.gongora.resources.demo.presentation.viewmodels.ColorsViewModel
 
 @Composable
-fun ColorsScreen(onNavigateBack: () -> Unit) {
+fun ColorsScreen(
+    onNavigateBack: () -> Unit
+) {
     val viewModel: ColorsViewModel = viewModel()
     val colorCategories = viewModel.colorCategories
 
     var isSearchVisible by rememberSaveable { mutableStateOf(false) }
     var query by rememberSaveable { mutableStateOf("") }
+
+    val result = bcpAliasTokens()
+    val tokens = result.tokens
 
     val filteredCategories by remember(query, colorCategories) {
         derivedStateOf {
@@ -59,7 +90,7 @@ fun ColorsScreen(onNavigateBack: () -> Unit) {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        containerColor = ScreenBackground,
+        containerColor = Color(tokens.surface.static.regular.flat.secondary),
         topBar = {
             AppTopBar(
                 isSearchVisible = isSearchVisible,
@@ -67,7 +98,9 @@ fun ColorsScreen(onNavigateBack: () -> Unit) {
                 onToggleSearch = {
                     isSearchVisible = !isSearchVisible
                     if (!isSearchVisible) query = ""
-                }
+                },
+                surfaceTokens = tokens.surface,
+                textTokens = tokens.text
             )
         }
     ) { padding ->
@@ -79,7 +112,9 @@ fun ColorsScreen(onNavigateBack: () -> Unit) {
             SearchBar(
                 visible = isSearchVisible,
                 value = query,
-                onValueChange = { query = it }
+                onValueChange = { query = it },
+                surfaceTokens = tokens.surface,
+                textTokens = tokens.text
             )
 
             LazyColumn(
@@ -87,13 +122,16 @@ fun ColorsScreen(onNavigateBack: () -> Unit) {
                 verticalArrangement = Arrangement.spacedBy(SectionGap)
             ) {
                 if (filteredCategories.isEmpty()) {
-                    item { EmptyState(message = "No se encontraron colores para \"$query\"") }
+                    item { EmptyState(message = "No se encontraron colores para \"$query\"", textTokens = tokens.text) }
                 } else {
                     filteredCategories.forEach { (category, colors) ->
                         item {
                             ColorCategorySection(
                                 categoryName = category.name,
-                                colors = colors
+                                colors = colors,
+                                textTokens = tokens.text,
+                                surfaceTokens = tokens.surface,
+                                borderTokens = tokens.border
                             )
                         }
                     }
@@ -108,16 +146,19 @@ fun ColorsScreen(onNavigateBack: () -> Unit) {
 private fun AppTopBar(
     isSearchVisible: Boolean,
     onBack: () -> Unit,
-    onToggleSearch: () -> Unit
+    onToggleSearch: () -> Unit,
+    surfaceTokens: com.gongora.resources.theme.SurfaceTokens,
+    textTokens: com.gongora.resources.theme.TextTokens
 ) {
     TopAppBar(
         title = { Text("Colores BCP") },
         navigationIcon = {
             IconButton(onClick = onBack) {
-                Icon(Icons.Filled.ArrowBack, contentDescription = "Volver")
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
             }
         },
         actions = {
+            // Botón de búsqueda
             IconButton(onClick = onToggleSearch) {
                 Icon(
                     imageVector = if (isSearchVisible) Icons.Filled.Close else Icons.Filled.Search,
@@ -126,10 +167,10 @@ private fun AppTopBar(
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            containerColor = Color(surfaceTokens.static.regular.flat.primary),
+            titleContentColor = Color(textTokens.static.regular.primary),
+            navigationIconContentColor = Color(textTokens.static.regular.primary),
+            actionIconContentColor = Color(textTokens.static.regular.primary)
         )
     )
 }
@@ -138,7 +179,9 @@ private fun AppTopBar(
 private fun SearchBar(
     visible: Boolean,
     value: String,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    surfaceTokens: com.gongora.resources.theme.SurfaceTokens,
+    textTokens: com.gongora.resources.theme.TextTokens
 ) {
     val focusRequester = remember { FocusRequester() }
     val keyboard = LocalSoftwareKeyboardController.current
@@ -162,11 +205,11 @@ private fun SearchBar(
                 keyboardActions = KeyboardActions(onSearch = { keyboard?.hide() }),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 colors = TextFieldDefaults.colors(
-                    focusedContainerColor = SearchBackground,
-                    unfocusedContainerColor = SearchBackground,
+                    focusedContainerColor = Color(surfaceTokens.static.regular.flat.tertiary),
+                    unfocusedContainerColor = Color(surfaceTokens.static.regular.flat.tertiary),
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
-                    cursorColor = MaterialTheme.colorScheme.primary
+                    cursorColor = Color(textTokens.static.regular.primary)
                 ),
                 shape = RoundedCornerShape(12.dp)
             )
@@ -181,9 +224,15 @@ private fun SearchBar(
 }
 
 @Composable
-private fun ColorCategorySection(categoryName: String, colors: List<ColorToken>) {
+private fun ColorCategorySection(
+    categoryName: String, 
+    colors: List<ColorToken>, 
+    textTokens: com.gongora.resources.theme.TextTokens,
+    surfaceTokens: com.gongora.resources.theme.SurfaceTokens,
+    borderTokens: com.gongora.resources.theme.BorderTokens
+) {
     Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-        CategoryHeader(name = categoryName, count = colors.size)
+        CategoryHeader(name = categoryName, count = colors.size, textTokens = textTokens)
         Spacer(Modifier.height(16.dp))
 
         Column(verticalArrangement = Arrangement.spacedBy(GridGap)) {
@@ -193,10 +242,22 @@ private fun ColorCategorySection(categoryName: String, colors: List<ColorToken>)
                     horizontalArrangement = Arrangement.spacedBy(GridGap)
                 ) {
                     pair.getOrNull(0)?.let {
-                        ColorCard(token = it, modifier = Modifier.weight(1f))
+                        ColorCard(
+                            token = it, 
+                            modifier = Modifier.weight(1f), 
+                            textTokens = textTokens, 
+                            surfaceTokens = surfaceTokens,
+                            borderTokens = borderTokens
+                        )
                     }
                     pair.getOrNull(1)?.let {
-                        ColorCard(token = it, modifier = Modifier.weight(1f))
+                        ColorCard(
+                            token = it, 
+                            modifier = Modifier.weight(1f), 
+                            textTokens = textTokens, 
+                            surfaceTokens = surfaceTokens,
+                            borderTokens = borderTokens
+                        )
                     } ?: Spacer(Modifier.weight(1f))
                 }
             }
@@ -205,7 +266,11 @@ private fun ColorCategorySection(categoryName: String, colors: List<ColorToken>)
 }
 
 @Composable
-private fun CategoryHeader(name: String, count: Int) {
+private fun CategoryHeader(
+    name: String, 
+    count: Int,
+    textTokens: com.gongora.resources.theme.TextTokens
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -229,24 +294,32 @@ private fun CategoryHeader(name: String, count: Int) {
             text = name.replace("_", " ").uppercase(),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface
+            color = Color(textTokens.static.regular.primary)
         )
         Spacer(Modifier.weight(1f))
         Text(
             text = "$count colores",
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = Color(textTokens.static.regular.secondary)
         )
     }
 }
 
 @Composable
-private fun ColorCard(token: ColorToken, modifier: Modifier = Modifier) {
+private fun ColorCard(
+    token: ColorToken, 
+    modifier: Modifier = Modifier, 
+    textTokens: com.gongora.resources.theme.TextTokens,
+    surfaceTokens: com.gongora.resources.theme.SurfaceTokens,
+    borderTokens: com.gongora.resources.theme.BorderTokens
+) {
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(CardCornerRadius),
         elevation = CardDefaults.cardElevation(defaultElevation = CardElevation),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(
+            containerColor = Color(surfaceTokens.static.regular.flat.primary)
+        )
     ) {
         Column(
             modifier = Modifier
@@ -264,7 +337,7 @@ private fun ColorCard(token: ColorToken, modifier: Modifier = Modifier) {
                     )
                     .border(
                         width = 1.dp,
-                        color = MaterialTheme.colorScheme.outline.copy(alpha = 0.25f),
+                        color = Color(borderTokens.static.regular.soft),
                         shape = RoundedCornerShape(SwatchRadius)
                     )
             )
@@ -274,7 +347,7 @@ private fun ColorCard(token: ColorToken, modifier: Modifier = Modifier) {
             Text(
                 text = token.name.replace('_', ' '),
                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
-                color = MaterialTheme.colorScheme.onSurface,
+                color = Color(textTokens.static.regular.primary),
                 textAlign = TextAlign.Center,
                 maxLines = 2
             )
@@ -284,7 +357,7 @@ private fun ColorCard(token: ColorToken, modifier: Modifier = Modifier) {
             Text(
                 text = token.hexLabel(),
                 style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Monospace),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = Color(textTokens.static.regular.secondary),
                 textAlign = TextAlign.Center
             )
 
@@ -293,7 +366,7 @@ private fun ColorCard(token: ColorToken, modifier: Modifier = Modifier) {
             Text(
                 text = token.key,
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                color = Color(textTokens.static.regular.secondary),
                 textAlign = TextAlign.Center,
                 maxLines = 1
             )
@@ -302,7 +375,10 @@ private fun ColorCard(token: ColorToken, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun EmptyState(message: String) {
+private fun EmptyState(
+    message: String,
+    textTokens: com.gongora.resources.theme.TextTokens
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -312,7 +388,7 @@ private fun EmptyState(message: String) {
         Text(
             text = message,
             style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = Color(textTokens.static.regular.secondary),
             textAlign = TextAlign.Center
         )
     }
@@ -350,9 +426,6 @@ private fun String.normalize(): String =
 
 
 private object UiColorsScreenTokens {
-    val ScreenBackground = Color(0xFFF8FBFF)
-    val SearchBackground = Color(0xFFF2F7FF)
-
     val CardCornerRadius = 16.dp
     val CardElevation = 6.dp
     val CardPadding = 16.dp

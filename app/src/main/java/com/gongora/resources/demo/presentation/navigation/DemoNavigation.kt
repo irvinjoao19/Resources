@@ -12,9 +12,6 @@ import com.gongora.resources.demo.presentation.screens.IconsScreen
 import com.gongora.resources.demo.presentation.screens.SpacingScreen
 import com.gongora.resources.demo.presentation.screens.TypographyScreen
 
-/**
- * Navigation routes for the demo application.
- */
 object DemoRoutes {
     const val HOME = "home"
     const val COLORS = "colors"
@@ -25,12 +22,11 @@ object DemoRoutes {
     const val ICONS = "icons"
 }
 
-/**
- * Navigation graph for the demo application.
- * @param navController Navigation controller for handling navigation
- */
 @Composable
-fun DemoNavigation(navController: NavHostController) {
+fun DemoNavigation(
+    navController: NavHostController,
+    isDarkMode: Boolean
+) {
     NavHost(
         navController = navController,
         startDestination = DemoRoutes.HOME
@@ -47,19 +43,27 @@ fun DemoNavigation(navController: NavHostController) {
         }
         
         composable(DemoRoutes.COLORS) {
-            ColorsScreen(onNavigateBack = { navController.popBackStack() })
+            ColorsScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
         
         composable(DemoRoutes.TYPOGRAPHY) {
-            TypographyScreen(onNavigateBack = { navController.popBackStack() })
+            TypographyScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
         
         composable(DemoRoutes.BORDER) {
-            BorderScreen(onNavigateBack = { navController.popBackStack() })
+            BorderScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
         
         composable(DemoRoutes.SPACING) {
-            SpacingScreen(onNavigateBack = { navController.popBackStack() })
+            SpacingScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
         
         composable(DemoRoutes.EFFECTS) {
@@ -67,7 +71,10 @@ fun DemoNavigation(navController: NavHostController) {
         }
         
         composable(DemoRoutes.ICONS) {
-            IconsScreen(onNavigateBack = { navController.popBackStack() })
+            IconsScreen(
+                onNavigateBack = { navController.popBackStack() },
+                isDarkMode = isDarkMode
+            )
         }
     }
 }

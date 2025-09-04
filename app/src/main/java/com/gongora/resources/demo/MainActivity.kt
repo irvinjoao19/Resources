@@ -9,7 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import com.gongora.resources.compose.BcpTheme
+import com.gongora.resources.compose.bcpAliasTokens
 import com.gongora.resources.demo.presentation.navigation.DemoNavigation
 
 /**
@@ -20,14 +20,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            BcpTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    DemoApp()
-                }
-            }
+            DemoApp()
         }
     }
 }
@@ -39,5 +32,27 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DemoApp() {
     val navController = rememberNavController()
-    DemoNavigation(navController = navController)
+    
+    // 🎯 USO DE ALIAS TOKENS - Hook principal para obtener el estado del tema
+    val result = bcpAliasTokens()
+    val isDark = result.isDark
+    
+    // 🎨 APLICAR TEMA DINÁMICO - Usar MaterialTheme con el tema detectado
+    MaterialTheme(
+        colorScheme = if (isDark) {
+            androidx.compose.material3.darkColorScheme()
+        } else {
+            androidx.compose.material3.lightColorScheme()
+        }
+    ) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            DemoNavigation(
+                navController = navController,
+                isDarkMode = isDark
+            )
+        }
+    }
 }
