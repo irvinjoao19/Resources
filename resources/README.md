@@ -78,10 +78,14 @@ data class AliasTokens(
 
 ### Hook Principal: `useBcpAliasTokens()`
 
+El hook `useBcpAliasTokens()` es el mecanismo principal para acceder a los Alias Tokens. Proporciona acceso reactivo a todos los tokens de diseño que se adaptan automáticamente al tema actual.
+
+#### Uso Básico
+
 ```kotlin
 @Composable
 fun MyComponent() {
-    val ( tokens, isDark, theme, toggleTheme )= useBcpAliasTokens()
+    val (tokens, isDark, toggleTheme) = useBcpAliasTokens()
     
     Column(
         modifier = Modifier
@@ -102,21 +106,131 @@ fun MyComponent() {
 }
 ```
 
+#### Acceso Directo a Categorías
+
+```kotlin
+@Composable
+fun ComponentWithDirectAccess() {
+    val (surface, text, border, icon) = useBcpAliasTokens()
+    
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(surface.static.regular.flat.primary)
+        ),
+        border = BorderStroke(1.dp, Color(border.static.regular.medium))
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = "Título Principal",
+                color = Color(text.static.regular.primary),
+                style = MaterialTheme.typography.headlineSmall
+            )
+            
+            Text(
+                text = "Texto secundario",
+                color = Color(text.static.regular.secondary),
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+    }
+}
+```
+
+#### Estados Interactivos
+
+```kotlin
+@Composable
+fun InteractiveButton() {
+    val (tokens) = useBcpAliasTokens()
+    var isPressed by remember { mutableStateOf(false) }
+    
+    Button(
+        onClick = { /* acción */ },
+        modifier = Modifier
+            .background(
+                color = if (isPressed) 
+                    Color(tokens.surface.interactive.base.regular.primary.pressed)
+                else 
+                    Color(tokens.surface.interactive.base.regular.primary.default)
+            )
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onPress = {
+                        isPressed = true
+                        tryAwaitRelease()
+                        isPressed = false
+                    }
+                )
+            }
+    ) {
+        Text(
+            text = "Botón Interactivo",
+            color = Color(tokens.text.static.regular.primary)
+        )
+    }
+}
+```
+
+#### Tema Forzado
+
+```kotlin
+@Composable
+fun ForcedThemeComponent() {
+    // Forzar tema claro
+    val (lightTokens) = useBcpAliasTokens(ThemeManager.ThemeType.LIGHT)
+    
+    // Forzar tema oscuro
+    val (darkTokens) = useBcpAliasTokens(ThemeManager.ThemeType.DARK)
+    
+    // Comparar ambos temas
+    Row {
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .background(Color(lightTokens.surface.static.regular.flat.primary))
+        ) {
+            Text("Tema Claro")
+        }
+        
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .background(Color(darkTokens.surface.static.regular.flat.primary))
+        ) {
+            Text("Tema Oscuro")
+        }
+    }
+}
+```
+
 ### Modos de Uso del Hook
 
 #### 1. Modo Automático (Recomendado)
 ```kotlin
 // Escucha automáticamente los cambios de tema del sistema
-val ( tokens, isDark ) = useBcpAliasTokens()
+val (tokens, isDark) = useBcpAliasTokens()
+
+// O con más propiedades
+val (tokens, isDark, isLight, theme, toggleTheme) = useBcpAliasTokens()
 ```
 
 #### 2. Modo Forzado
 ```kotlin
 // Siempre tema claro
-val tokens = useBcpAliasTokens(ThemeManager.ThemeType.LIGHT)
+val (tokens) = useBcpAliasTokens(ThemeManager.ThemeType.LIGHT)
 
 // Siempre tema oscuro
-val tokens  = useBcpAliasTokens(ThemeManager.ThemeType.DARK)
+val (tokens) = useBcpAliasTokens(ThemeManager.ThemeType.DARK)
+
+// O usando el resultado completo
+val result = useBcpAliasTokens(ThemeManager.ThemeType.LIGHT)
+val tokens = result.tokens
+val isDark = result.isDark
 ```
 
 ### Estructura Completa de Tokens
@@ -214,7 +328,7 @@ import com.gongora.resources.compose.useBcpAliasTokens
 
 @Composable
 fun MyApp() {
-    val { isDark } = useBcpAliasTokens()
+    val (isDark) = useBcpAliasTokens()
     
     MaterialTheme(
         colorScheme = if (isDark) {
@@ -234,7 +348,7 @@ fun MyApp() {
 ```kotlin
 @Composable
 fun MyComponent() {
-    val { tokens } = useBcpAliasTokens()
+    val (tokens) = useBcpAliasTokens()
     
     Card(
         modifier = Modifier
@@ -248,9 +362,9 @@ fun MyComponent() {
             containerColor = Color(tokens.surface.static.regular.flat.primary)
         )
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
+    Column(
+        modifier = Modifier.padding(16.dp)
+    ) {
             Text(
                 text = "Título",
                 color = Color(tokens.text.static.regular.primary),
@@ -278,7 +392,7 @@ fun BcpButton(
     variant: ButtonVariant = ButtonVariant.PRIMARY,
     enabled: Boolean = true
 ) {
-    val { tokens } = useBcpAliasTokens()
+    val (tokens) = useBcpAliasTokens()
     
     val backgroundColor = when (variant) {
         ButtonVariant.PRIMARY -> tokens.surface.interactive.base.regular.primary.default
@@ -319,7 +433,7 @@ fun BcpStatusCard(
     title: String,
     content: String
 ) {
-    val { tokens } = useBcpAliasTokens()
+    val (tokens) = useBcpAliasTokens()
     
     val borderColor = when (status) {
         StatusType.SUCCESS -> tokens.border.static.semantic.success
@@ -354,9 +468,9 @@ fun BcpStatusCard(
             containerColor = Color(backgroundColor)
         )
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
             Text(
                 text = title,
                 color = Color(textColor),
@@ -381,7 +495,7 @@ enum class StatusType {
 ```kotlin
 @Composable
 fun ThemeToggle() {
-    val { isDark, toggleTheme } = useBcpAliasTokens()
+    val (isDark, toggleTheme) = useBcpAliasTokens()
     
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -558,7 +672,7 @@ fun InteractiveIcon(
     isPressed: Boolean,
     isEnabled: Boolean
 ) {
-    val { tokens } = useBcpAliasTokens()
+    val (tokens) = useBcpAliasTokens()
     
     val iconColor = when {
         !isEnabled -> tokens.icon.interactive.regular.disabled
@@ -585,7 +699,7 @@ val backgroundColor = BCPResources.aliasTokens.surfacePrimary
 val textColor = BCPResources.aliasTokens.textPrimary
 
 // ✅ NUEVA FORMA - Estructura anidada
-val { tokens } = useBcpAliasTokens()
+val (tokens) = useBcpAliasTokens()
 val backgroundColor = tokens.surface.static.regular.flat.primary
 val textColor = tokens.text.static.regular.primary
 ```
@@ -659,7 +773,7 @@ resources/
 ### 1. Usar Alias Tokens
 ```kotlin
 // ✅ CORRECTO - Usar Alias Tokens
-val { tokens } = useBcpAliasTokens()
+val (tokens) = useBcpAliasTokens()
 val backgroundColor = tokens.surface.static.regular.flat.primary
 
 // ❌ EVITAR - Usar tokens directos
@@ -669,7 +783,7 @@ val backgroundColor = BCPResources.colors.brand.blue.color500
 ### 2. Gestión de Temas
 ```kotlin
 // ✅ CORRECTO - Usar hook para gestión reactiva
-val { isDark, toggleTheme } = useBcpAliasTokens()
+val (isDark, toggleTheme) = useBcpAliasTokens()
 
 // ❌ EVITAR - Cambiar tema directamente
 BCPResources.setTheme(ThemeManager.ThemeType.DARK)
